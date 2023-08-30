@@ -11,7 +11,7 @@ export default function PopUpModal(data) {
     axios
       .post(
         "http://localhost:3000/coupon/confirm",
-        { couponCode, finalAmt, userId: "64dbbb2b456dd3bf3a6795e5" },
+        { couponCode, finalAmt, userId: "64e5fd10325d2bf83ed25b2a" },
         {
           headers: {
             "Content-Type": "application/json",

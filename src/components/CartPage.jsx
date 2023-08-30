@@ -3,6 +3,7 @@ import { MyContext } from "../contexts/MyContext";
 import PopUpModal from "./PopupModal";
 import axios from "axios";
 import ScrollToTopButton from "./ScrollUp";
+import { useEffect } from "react";
 const CartPage = () => {
   const { myState, setMyState } = useContext(MyContext);
   const [couponCode, setCouponCode] = useState(null);
@@ -20,9 +21,8 @@ const CartPage = () => {
   const newArr = [...mySet];
 
   let handleVerify = () => {
-    console.log(couponCode);
     const details = {
-      userId: "64dbbb2b456dd3bf3a6795e5",
+      userId: "64e5fd10325d2bf83ed25b2a",
       couponCode: couponCode,
       quantity: myState.length,
       totalAmount: calculateAmount(),
@@ -30,7 +30,7 @@ const CartPage = () => {
         return item.id;
       }),
     };
-    console.log(details);
+
     axios
       .post("http://localhost:3000/coupon/verify", details, {
         headers: {
@@ -42,12 +42,18 @@ const CartPage = () => {
           setPopUp("success");
           console.log(response.data.finalAmount);
           setFinalAmt(response.data.finalAmount);
-        } else if (response.status == 404) {
+        } else {
           setPopUp("failure");
+          setTimeout(() => {
+            setPopUp("nothing");
+          }, 10);
         }
       })
       .catch((error) => {
         setPopUp("failure");
+        setTimeout(() => {
+          setPopUp("nothing");
+        }, 10);
         console.error(error);
       });
   };
@@ -55,7 +61,7 @@ const CartPage = () => {
   let handleRedeem = () => {
     console.log(couponCode);
     const details = {
-      userId: "64dbbb2b456dd3bf3a6795e5",
+      userId: "64e5fd10325d2bf83ed25b2a",
       couponCode: couponCode,
       totalAmount: calculateAmount(),
       productIdList: myState.map((item) => {
@@ -126,16 +132,20 @@ const CartPage = () => {
             >
               Redeem coupon
             </button>
-            {popUp == "success" ? (
+            {popUp === "success" ? (
               <div className="bg-accent p-5 rounded-xl mt-10 text-white mr-10 w-80">
                 Coupon Verified !!!
               </div>
-            ) : null}
-            {popUp == "failure" ? (
+            ) : (
+              <> </>
+            )}
+            {popUp === "failure" ? (
               <div className="bg-error p-5 rounded-xl mt-10 text-white mr-10 w-80">
                 Coupon code is invalid !!!
               </div>
-            ) : null}
+            ) : (
+              <></>
+            )}
           </div>
         </div>
 
@@ -167,7 +177,6 @@ const CartPage = () => {
               />
             </button>
           </div>
-       
 
           {done ? (
             <div className="bg-warning p-5 rounded-xl mt-10 text-black w-full mr-10">
